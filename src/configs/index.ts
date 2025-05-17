@@ -7,14 +7,12 @@ import { welcomeMessage } from "../api/utils";
 
 interface ExtensionWorkspaceConfig {
   files: string[];
-  courseId: string;
   assignment: string;
   token: string;
 }
 
 const configSchema = z.object({
   files: z.array(z.string()),
-  courseId: z.string(),
   assignment: z.string(),
   token: z.string()
 });
