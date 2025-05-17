@@ -1,20 +1,19 @@
 import * as vscode from "vscode";
 
 interface JwtTokens {
-	access: string;
-	refresh: string;
+	codeTraceToken: string;
 }
 
 export function getJwtTokens(): JwtTokens {
 	const config = vscode.workspace.getConfiguration("codeRecorder");
-	return config.get<JwtTokens>("jwtTokens") || { access: "", refresh: "" };
+	return config.get<JwtTokens>("jwtTokens") || { codeTraceToken: "" };
 }
 
-export function setJwtTokens(access: string, refresh: string): void {
+export function setJwtTokens(codeTraceToken: string): void {
 	const config = vscode.workspace.getConfiguration("codeRecorder");
 	config.update(
 		"jwtTokens",
-		{ access, refresh },
+		codeTraceToken,
 		vscode.ConfigurationTarget.Global
 	);
 }

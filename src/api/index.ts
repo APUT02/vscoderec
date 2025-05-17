@@ -1,63 +1,79 @@
-import { getJwtTokens, setJwtTokens } from "../token";
-
-import axios from "axios";
+import axios, { AxiosInstance } from "axios";
+import { getJwtTokens, setJwtTokens } from "../token"; // Your vscode settings-based token functions
 
 export default class API {
-  private static api: API;
-  private static axiosAPI: axios.AxiosInstance;
-  private static retryMax: number = 5;
-  private static retryCount: number = 0;
+  private static instance: AxiosInstance;
 
-  private constructor() {
-    API.axiosAPI = axios.create({ baseURL: "https://www.aiedut.com/api/" });
-    API.registerInterceptors();
+  private constructor() {}
+
+  public static getInstance(): AxiosInstance {
+    if (!API.instance) {
+      API.instance = axios.create({
+        baseURL: "https://www.aiedut.com/api/",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      API.registerInterceptors();
+    }
+
+    return API.instance;
   }
 
   private static registerInterceptors(): void {
-    API.axiosAPI.interceptors.request.use((config) => {
-      API.retryCount = 0;
-      const { access } = getJwtTokens();
-      if (!!access && !config.headers.Authorization) {
-        config.headers.Authorization = `Bearer ${access}`;
-      }
-      return config;
-    }, Promise.reject);
-
-    API.axiosAPI.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
-        if (
-          (error.response.status && error.response.status !== 401) ||
-          API.retryCount++ >= API.retryMax
-        ) {
-          return Promise.reject(error);
+    API.instance.interceptors.request.use(
+      (config) => {
+        const { codeTraceToken } = getJwtTokens();
+        if (codeTraceToken) {
+          // Set the access token as a session cookie
+          config.headers["Cookie"] = `codeTrace-token=${codeTraceToken}`;
         }
-        const { refresh } = getJwtTokens();
-        if (!refresh) {
-          return Promise.reject(error);
-        }
-        try {
-          const { data } = await API.axiosAPI.post("token/refresh/", {
-            refresh,
-          });
-          const { refresh: _refresh, access } = data;
-          originalRequest.headers.Authorization = `Bearer ${access}`;
-          setJwtTokens(access, _refresh);
-          return API.axiosAPI(originalRequest);
-        } catch (err) {
-          return Promise.reject(error);
-        }
-      }
+        return config;
+      },
+      (error) => Promise.reject(error)
     );
-  }
 
-  public static getInstance() {
-    if (!API.api) {
-      API.api = new API();
-    }
-    return API.axiosAPI;
-  }
+    // API.instance.interceptors.response.use(
+    //   (res) => res,
+    //   async (error) => {
+    //     const originalRequest = error.config;
 
-  welcomeMessage() {}
+    //     // Prevent infinite loop
+    //     if (
+    //       error.response?.status !== 401 ||
+    //       originalRequest._retry
+    //     ) {
+    //       return Promise.reject(error);
+    //     }
+
+    //     // Mark request to prevent re-entry
+    //     originalRequest._retry = true;
+
+    //     const { refresh } = getJwtTokens();
+    //     if (!refresh) {
+    //       return Promise.reject(error);
+    //     }
+
+    //     try {
+    //       const { data } = await axios.post("token/refresh/", {
+    //         refresh,
+    //       });
+
+    //       const { access, refresh: _refresh } = data;
+
+    //       // Store new tokens
+    //       setJwtTokens(access, _refresh);
+
+    //       // Re-attach updated token as cookie
+    //       originalRequest.headers["Cookie"] = `next-auth.session-token=${access}`;
+
+    //       // Retry original request
+    //       return API.instance(originalRequest);
+    //     } catch (refreshError) {
+    //       return Promise.reject(refreshError);
+    //     }
+    //   }
+    // );
+  }
 }

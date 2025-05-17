@@ -7,7 +7,7 @@ export function welcomeMessage(catchFn: () => void = () => {}) {
     .get("user/info/")
     .then(({ data: userInfo }) => {
       vscode.window.showInformationMessage(
-        `Welcome Dear ${userInfo.firstName} 👋 `
+        `Welcome Dear ${userInfo.name} 👋 `
       );
     })
     .catch(catchFn);
