@@ -8,8 +8,8 @@ import {
 } from "./traces";
 
 import ConfigManager from "./configs";
-import { LoginDataProvider } from "./views/login";
 import { resendCaches } from "./traces/resend";
+import { setJwtTokens } from "./token";
 
 function makeDebounce<T>(
   fn: (arg: T) => TraceEvent,
@@ -25,7 +25,8 @@ function makeDebounce<T>(
 }
 
 export function activate(context: vscode.ExtensionContext) {
-  ConfigManager.getInstance();
+  const configManager = ConfigManager.getInstance();
+  setJwtTokens(configManager?.getConfigs()?.token ?? "");
   const debounceSaved = makeDebounce(onWillSaveTextDocument);
   const debounceChange = makeDebounce(onDidChangeTextDocument);
 
@@ -39,12 +40,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("codeRecorder.sendCache", resendCaches)
   );
 
-  context.subscriptions.push(
-    vscode.window.registerWebviewViewProvider(
-      "codeRecorderView.Login",
-      new LoginDataProvider(context)
-    )
-  );
   context.subscriptions.push(
     vscode.workspace.onDidSaveTextDocument((document) => {
       debounceSaved(document);
