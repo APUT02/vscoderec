@@ -57,10 +57,9 @@ export async function postTraceData(
   cacheIt: boolean = true
 ): Promise<boolean> {
   let failed = false;
-  const { courseId, assignment } = configs.getConfigs()!;
+  const { assignment } = configs.getConfigs()!;
   const data = {
     date,
-    courseId,
     assignment,
     ...trace,
     filename: getFilename(trace.filename),
@@ -71,7 +70,7 @@ export async function postTraceData(
     console.error("postTraceData", err);
     failed = true;
   }
-  cacheIt && configs.cacheIt({ date, courseId, assignment, trace, failed });
+  cacheIt && configs.cacheIt({ date, assignment, trace, failed });
   return failed;
 }
 
