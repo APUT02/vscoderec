@@ -32,9 +32,9 @@ export default class ConfigManager {
     this.cacheDir = path.join(workspaceFolder.uri.fsPath, ".cache");
     this.configs = this.getConfigFile();
     this.initialize();
-    welcomeMessage(() => {
-      vscode.window.showWarningMessage("Authentication Failed Please Login!");
-    });
+    // welcomeMessage(() => {
+    //   vscode.window.showWarningMessage("Authentication Failed Please Login!");
+    // });
   }
 
   public static getInstance(): ConfigManager | undefined {
