@@ -9,7 +9,7 @@ export default class API {
   public static getInstance(): AxiosInstance {
     if (!API.instance) {
       API.instance = axios.create({
-        baseURL: "https://www.aiedut.ir/api/",
+        baseURL: "https://aiedut.ir/api/",
         headers: {
           "Content-Type": "application/json",
         },
@@ -25,6 +25,7 @@ export default class API {
     API.instance.interceptors.request.use(
       (config) => {
         const { codeTraceToken } = getJwtTokens();
+        console.log("codeTraceToken: ", codeTraceToken);
         if (codeTraceToken) {
           // Set the access token as a Authorization
           config.headers["Authorization"] = `Bearer ${codeTraceToken}`;

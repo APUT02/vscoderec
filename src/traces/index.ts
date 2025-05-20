@@ -56,6 +56,7 @@ export async function postTraceData(
   configs: ConfigManager,
   cacheIt: boolean = true
 ): Promise<boolean> {
+  console.log(trace);
   let failed = false;
   const { assignment } = configs.getConfigs()!;
   const data = {

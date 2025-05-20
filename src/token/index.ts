@@ -13,7 +13,7 @@ export function setJwtTokens(codeTraceToken: string): void {
 	const config = vscode.workspace.getConfiguration("codeRecorder");
 	config.update(
 		"jwtTokens",
-		codeTraceToken,
+		{ codeTraceToken },
 		vscode.ConfigurationTarget.Global
 	);
 }
