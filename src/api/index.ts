@@ -26,8 +26,8 @@ export default class API {
       (config) => {
         const { codeTraceToken } = getJwtTokens();
         if (codeTraceToken) {
-          // Set the access token as a session cookie
-          config.headers["Cookie"] = `codeTrace-token=${codeTraceToken}`;
+          // Set the access token as a Authorization
+          config.headers["Authorization"] = `Bearer ${codeTraceToken}`;
         }
         return config;
       },
