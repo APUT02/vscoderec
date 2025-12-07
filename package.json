@@ -14,7 +14,9 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished"
+    "onStartupFinished",
+    "onCommand:codeRecorder.sendCache"
+    
   ],
   "main": "./out/extension.js",
   "contributes": {
