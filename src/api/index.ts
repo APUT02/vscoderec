@@ -9,7 +9,7 @@ export default class API {
   public static getInstance(): AxiosInstance {
     if (!API.instance) {
       API.instance = axios.create({
-        baseURL: "https://aiedut.ir/api/",
+        baseURL: "https://app.rastai.ai/api/",
         headers: {
           "Content-Type": "application/json",
         },

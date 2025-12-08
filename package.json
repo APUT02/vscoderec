@@ -2,7 +2,7 @@
   "name": "code-recorder",
   "displayName": "code-recorder",
   "description": "",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "engines": {
     "vscode": "^1.87.0"
   },
@@ -28,7 +28,7 @@
       },
       {
         "command": "codeRecorder.sendCache",
-        "title": "send cached data to AiEdUt.com",
+        "title": "send cached data to app.rastai.ai",
         "category": "Code Recorder"
       }
     ],
@@ -46,7 +46,7 @@
         {
           "type": "webview",
           "id": "codeRecorderView.Login",
-          "name": "Login AiEdUt"
+          "name": "Login rastai"
         }
       ]
     },
